@@ -30,10 +30,10 @@ export default function Home() {
   if (!mounted) return null;
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header con Theme Switcher */}
-        <div className="flex justify-end items-center mb-8">
+        <div className="flex justify-end items-center mb-8 pl-14 lg:pl-0">
           <ThemeSwitcher
             value={theme as "light" | "dark" | "system"}
             onChange={handleThemeChange}
@@ -49,7 +49,7 @@ export default function Home() {
           />
 
           {/* Main Content */}
-          <main className="flex-1">
+          <main className="flex-1 w-full lg:w-auto">
             {activeSection === "bio" && <Bio />}
             {/* Aquí irán los demás componentes según la sección activa */}
           </main>

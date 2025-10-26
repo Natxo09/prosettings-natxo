@@ -1,8 +1,9 @@
 "use client";
 
 import { Icon } from "./icon";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { Menu, X } from "lucide-react";
 
 type NavItem = {
   id: string;
@@ -61,50 +62,103 @@ interface SidebarProps {
 
 export function Sidebar({ activeSection = "bio", onSectionChange }: SidebarProps) {
   const [active, setActive] = useState(activeSection);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleItemClick = (itemId: string) => {
     setActive(itemId);
     onSectionChange?.(itemId);
+    // Cerrar el sidebar en móvil al hacer click
+    setIsOpen(false);
   };
 
+  // Cerrar sidebar al hacer resize a desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Prevenir scroll del body cuando el sidebar móvil está abierto
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [isOpen]);
+
   return (
-    <aside className="w-64 bg-card rounded-2xl p-6 shadow-lg h-fit sticky top-8">
-      <nav className="space-y-6">
-        {navigationSections.map((section, sectionIndex) => (
-          <div key={sectionIndex}>
-            {section.title && (
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-                {section.title}
-              </h3>
-            )}
-            <ul className="space-y-1">
-              {section.items.map((item) => (
-                <li key={item.id}>
-                  <button
-                    onClick={() => handleItemClick(item.id)}
-                    className={cn(
-                      "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
-                      active === item.id
-                        ? "bg-background text-foreground shadow-sm"
-                        : "text-card-foreground/70 hover:text-card-foreground hover:bg-background/50"
-                    )}
-                  >
-                    <Icon
-                      name={item.icon}
-                      size={18}
+    <>
+      {/* Botón hamburguesa para móvil */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="lg:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-card text-card-foreground shadow-lg"
+        aria-label="Toggle menu"
+      >
+        {isOpen ? <X size={20} /> : <Menu size={20} />}
+      </button>
+
+      {/* Overlay para móvil */}
+      {isOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={cn(
+          "w-64 bg-card rounded-2xl p-6 shadow-lg h-fit transition-transform duration-300 ease-in-out",
+          // Desktop: sticky
+          "lg:sticky lg:top-8",
+          // Mobile: fixed con transform
+          "fixed top-4 left-4 bottom-4 z-50 overflow-y-auto",
+          isOpen ? "translate-x-0" : "-translate-x-[calc(100%+2rem)] lg:translate-x-0"
+        )}
+      >
+        <nav className="space-y-6">
+          {navigationSections.map((section, sectionIndex) => (
+            <div key={sectionIndex}>
+              {section.title && (
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                  {section.title}
+                </h3>
+              )}
+              <ul className="space-y-1">
+                {section.items.map((item) => (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => handleItemClick(item.id)}
                       className={cn(
-                        "transition-colors",
-                        active === item.id ? "text-foreground" : "text-card-foreground/60"
+                        "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+                        active === item.id
+                          ? "bg-background text-foreground shadow-sm"
+                          : "text-card-foreground/70 hover:text-card-foreground hover:bg-background/50"
                       )}
-                    />
-                    <span>{item.label}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </nav>
-    </aside>
+                    >
+                      <Icon
+                        name={item.icon}
+                        size={18}
+                        className={cn(
+                          "transition-colors",
+                          active === item.id ? "text-foreground" : "text-card-foreground/60"
+                        )}
+                      />
+                      <span>{item.label}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+      </aside>
+    </>
   );
 }
