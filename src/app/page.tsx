@@ -2,12 +2,14 @@
 
 import { ThemeSwitcher } from "@/components/kibo-ui/theme-switcher";
 import { Bio } from "@/components/bio";
+import { Sidebar } from "@/components/sidebar";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [activeSection, setActiveSection] = useState("bio");
 
   useEffect(() => {
     setMounted(true);
@@ -29,7 +31,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen p-8">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Header con Theme Switcher */}
         <div className="flex justify-end items-center mb-8">
           <ThemeSwitcher
@@ -38,8 +40,20 @@ export default function Home() {
           />
         </div>
 
-        {/* Bio Section */}
-        <Bio />
+        {/* Layout con Sidebar y Contenido */}
+        <div className="flex gap-8">
+          {/* Sidebar */}
+          <Sidebar
+            activeSection={activeSection}
+            onSectionChange={setActiveSection}
+          />
+
+          {/* Main Content */}
+          <main className="flex-1">
+            {activeSection === "bio" && <Bio />}
+            {/* Aquí irán los demás componentes según la sección activa */}
+          </main>
+        </div>
       </div>
     </div>
   );
