@@ -13,6 +13,18 @@ export default function Home() {
     setMounted(true);
   }, []);
 
+  const handleThemeChange = (newTheme: "light" | "dark" | "system") => {
+    // Check if View Transitions API is supported
+    if (!document.startViewTransition) {
+      setTheme(newTheme);
+      return;
+    }
+
+    document.startViewTransition(() => {
+      setTheme(newTheme);
+    });
+  };
+
   if (!mounted) return null;
 
   return (
@@ -22,7 +34,7 @@ export default function Home() {
         <div className="flex justify-end items-center mb-8">
           <ThemeSwitcher
             value={theme as "light" | "dark" | "system"}
-            onChange={(newTheme) => setTheme(newTheme)}
+            onChange={handleThemeChange}
           />
         </div>
 
