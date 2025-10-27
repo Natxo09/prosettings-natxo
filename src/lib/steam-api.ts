@@ -23,6 +23,7 @@ export interface SteamInventoryDescription {
     type: string;
     value: string;
     color?: string;
+    name?: string;
   }>;
   tradable: number;
   marketable: number;
