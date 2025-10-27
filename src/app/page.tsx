@@ -9,6 +9,15 @@ import { LaunchOptions } from "@/components/cs2/launch-options";
 import { VideoSettings } from "@/components/cs2/video-settings";
 import { Hud } from "@/components/cs2/hud";
 import { Radar } from "@/components/cs2/radar";
+import { Mouse } from "@/components/setup/mouse";
+import { Monitor } from "@/components/setup/monitor";
+import { Keyboard } from "@/components/setup/keyboard";
+import { Headphones } from "@/components/setup/headphones";
+import { Microphone } from "@/components/setup/microphone";
+import { Mousepad } from "@/components/setup/mousepad";
+import { PC } from "@/components/setup/pc";
+import { GPUSettings } from "@/components/setup/gpu-settings";
+import { Footer } from "@/components/footer";
 import { Icon } from "@/components/icon";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -37,8 +46,8 @@ export default function Home() {
   if (!mounted) return null;
 
   return (
-    <div className="min-h-screen p-4 sm:p-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen flex flex-col pt-4 px-4 sm:pt-8 sm:px-8">
+      <div className="max-w-7xl mx-auto flex-1 w-full">
         {/* Header con Logo CS2 y Theme Switcher */}
         <div className="flex justify-between items-center mb-8 pl-14 lg:pl-0">
           <div className="flex items-center gap-3">
@@ -103,64 +112,52 @@ export default function Home() {
               </div>
             </section>
 
+            {/* Mouse Section */}
             <section id="mouse">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">Mouse</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <Mouse />
             </section>
 
+            {/* Monitor Section */}
             <section id="monitor">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">Monitor</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <Monitor />
             </section>
 
+            {/* Keyboard Section */}
             <section id="keyboard">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">Keyboard</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <Keyboard />
             </section>
 
+            {/* Headphones Section */}
             <section id="headphones">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">Headphones</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <Headphones />
             </section>
 
+            {/* Microphone Section */}
             <section id="mic">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">Microphone</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <Microphone />
             </section>
 
+            {/* Mousepad Section */}
             <section id="mousepad">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">Mousepad</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <Mousepad />
             </section>
 
+            {/* PC Specifications Section */}
             <section id="pc-specs">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">PC Specifications</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <PC />
             </section>
 
+            {/* GPU Settings Section */}
             <section id="gpu-settings">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">GPU Settings</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <GPUSettings />
             </section>
           </main>
         </div>
+
       </div>
+
+      {/* Footer - Full Width */}
+      <Footer />
     </div>
   );
 }

@@ -7,22 +7,22 @@ const socialLinks = [
   {
     name: "Steam",
     icon: "steam" as const,
-    url: "https://steamcommunity.com/id/natxo",
+    url: "https://steamcommunity.com/id/natxxo",
   },
   {
     name: "Twitch",
     icon: "twitch" as const,
-    url: "https://twitch.tv/natxo",
+    url: "https://twitch.tv/Natxo",
   },
   {
     name: "Twitter",
     icon: "twitter" as const,
-    url: "https://twitter.com/natxo",
+    url: "https://twitter.com/NatxoDev",
   },
   {
     name: "YouTube",
     icon: "youtube" as const,
-    url: "https://youtube.com/@natxo",
+    url: "https://youtube.com/@NatxoNetwork",
   },
 ];
 
