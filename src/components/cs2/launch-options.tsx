@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Copy, Check } from "lucide-react";
 import { Icon } from "@/components/icon";
+import { trackEvent } from "@/lib/analytics";
 
 const LAUNCH_OPTIONS = "-novid -high -threads 9 -mainthreadpriority 2 -nohltv +fps_max 0 -allow_third_party_software";
 
@@ -14,6 +15,9 @@ export function LaunchOptions() {
       await navigator.clipboard.writeText(LAUNCH_OPTIONS);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+
+      // Track launch options copy event
+      trackEvent("Launch Options Copied");
     } catch (err) {
       console.error("Failed to copy:", err);
     }

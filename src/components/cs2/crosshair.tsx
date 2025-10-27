@@ -5,6 +5,7 @@ import { Copy, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { Icon } from "@/components/icon";
 import Image from "next/image";
 import gsap from "gsap";
+import { trackEvent } from "@/lib/analytics";
 
 interface CrosshairSettings {
   style: number;
@@ -61,6 +62,11 @@ export function Crosshair() {
       await navigator.clipboard.writeText(CROSSHAIR_CODE);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+
+      // Track crosshair copy event
+      trackEvent("Crosshair Copied", {
+        code: CROSSHAIR_CODE,
+      });
     } catch (err) {
       console.error("Failed to copy:", err);
     }
@@ -179,17 +185,29 @@ function CrosshairPreview({ settings }: CrosshairPreviewProps) {
   }, [currentMapIndex]);
 
   const nextMap = () => {
-    setCurrentMapIndex((prev) => (prev + 1) % MAP_SCREENSHOTS.length);
+    const newIndex = (currentMapIndex + 1) % MAP_SCREENSHOTS.length;
+    setCurrentMapIndex(newIndex);
+    trackEvent("Crosshair Preview Navigation", {
+      direction: "next",
+      map: MAP_SCREENSHOTS[newIndex].name
+    });
   };
 
   const prevMap = () => {
-    setCurrentMapIndex((prev) =>
-      prev === 0 ? MAP_SCREENSHOTS.length - 1 : prev - 1
-    );
+    const newIndex = currentMapIndex === 0 ? MAP_SCREENSHOTS.length - 1 : currentMapIndex - 1;
+    setCurrentMapIndex(newIndex);
+    trackEvent("Crosshair Preview Navigation", {
+      direction: "previous",
+      map: MAP_SCREENSHOTS[newIndex].name
+    });
   };
 
   const goToMap = (index: number) => {
     setCurrentMapIndex(index);
+    trackEvent("Crosshair Preview Navigation", {
+      direction: "dot",
+      map: MAP_SCREENSHOTS[index].name
+    });
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {

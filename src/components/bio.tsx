@@ -7,6 +7,7 @@ import { Icon } from "./icon";
 import { Tooltip } from "./ui/tooltip";
 import { Spinner } from "./ui/spinner";
 import { LeetifyProfile } from "@/lib/leetify-api";
+import { trackEvent } from "@/lib/analytics";
 
 const socialLinks = [
   {
@@ -204,6 +205,7 @@ export function Bio() {
                   rel="noopener noreferrer"
                   className="w-10 h-10 flex items-center justify-center rounded-full bg-background/80 hover:bg-background hover:scale-110 transition-all duration-200 text-foreground/70 hover:text-foreground"
                   aria-label={social.name}
+                  onClick={() => trackEvent("Bio Social Link Click", { platform: social.name })}
                 >
                   {social.icon === "faceit" ? (
                     <Image

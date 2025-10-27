@@ -4,6 +4,7 @@ import { Icon } from "./icon";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 type NavItem = {
   id: string;
@@ -67,6 +68,11 @@ export function Sidebar({ activeSection = "bio", onSectionChange }: SidebarProps
   const handleItemClick = (itemId: string) => {
     setActive(itemId);
     onSectionChange?.(itemId);
+
+    // Track navigation
+    trackEvent("Section Navigation", {
+      section: itemId,
+    });
 
     // Scroll suave a la sección
     const element = document.getElementById(itemId);

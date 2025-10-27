@@ -5,6 +5,7 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 
 const themes = [
   {
@@ -47,6 +48,9 @@ export const ThemeSwitcher = ({
   const handleThemeClick = useCallback(
     (themeKey: "light" | "dark" | "system") => {
       setTheme(themeKey);
+
+      // Track theme change
+      trackEvent("Theme Changed", { theme: themeKey });
     },
     [setTheme]
   );

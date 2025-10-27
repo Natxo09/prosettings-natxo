@@ -8,6 +8,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Tooltip } from "@/components/ui/tooltip";
 import { ProcessedSkin } from "@/lib/steam-api";
 import { SkinDetailModal } from "./skin-detail-modal";
+import { trackEvent } from "@/lib/analytics";
 
 export function Skins() {
   const [skins, setSkins] = useState<ProcessedSkin[]>([]);
@@ -61,18 +62,24 @@ export function Skins() {
   const goToNextPage = () => {
     if (currentPage < totalPages - 1) {
       setCurrentPage(currentPage + 1);
+      trackEvent("Skins Pagination", { direction: "next", page: currentPage + 2 });
     }
   };
 
   const goToPreviousPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
+      trackEvent("Skins Pagination", { direction: "previous", page: currentPage });
     }
   };
 
   const handleSkinClick = (skin: ProcessedSkin) => {
     setSelectedSkin(skin);
     setIsModalOpen(true);
+    trackEvent("Skin Detail Opened", {
+      skin: skin.marketName,
+      wear: skin.wearName || "Unknown"
+    });
   };
 
   const handleCloseModal = () => {

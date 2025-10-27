@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { Icon } from "./icon";
 import { Tooltip } from "./ui/tooltip";
+import { trackEvent } from "@/lib/analytics";
 
 const socialLinks = [
   {
@@ -63,6 +64,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-background/80 hover:bg-background hover:scale-110 transition-all duration-200 text-foreground/70 hover:text-foreground"
                 aria-label={social.name}
+                onClick={() => trackEvent("Social Link Click", { platform: social.name })}
               >
                 {social.icon === "faceit" ? (
                   <Image
@@ -94,6 +96,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-muted-foreground hover:opacity-70 transition-opacity underline underline-offset-2"
+              onClick={() => trackEvent("GitHub Repo Click")}
             >
               Open Source Project
               <ExternalLink className="size-3" />
