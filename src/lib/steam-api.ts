@@ -45,9 +45,24 @@ export interface SteamInventoryDescription {
   }>;
 }
 
+export interface AssetProperty {
+  propertyid: number;
+  float_value?: number;
+  int_value?: number;
+  name: string;
+}
+
+export interface AssetPropertyData {
+  appid: number;
+  contextid: string;
+  assetid: string;
+  asset_properties: AssetProperty[];
+}
+
 export interface SteamInventoryResponse {
   assets?: SteamInventoryItem[];
   descriptions?: SteamInventoryDescription[];
+  asset_properties?: AssetPropertyData[];
   total_inventory_count: number;
   success: number;
   rwgrsn: number;
@@ -79,6 +94,8 @@ export interface ProcessedSkin {
   marketable: boolean;
   stickers: Sticker[];
   charm?: Charm;
+  floatValue?: number;
+  patternTemplate?: number;
 }
 
 /**
@@ -227,6 +244,7 @@ export async function getSteamInventory(steamId64?: string): Promise<ProcessedSk
 
   const allAssets: SteamInventoryItem[] = [];
   const allDescriptions: SteamInventoryDescription[] = [];
+  const allAssetProperties: AssetPropertyData[] = [];
 
   // Pequeño helper de reintentos
   async function fetchWithRetry(url: string, tries = 4): Promise<Response> {
@@ -272,6 +290,7 @@ export async function getSteamInventory(steamId64?: string): Promise<ProcessedSk
 
       if (Array.isArray(data.assets)) allAssets.push(...data.assets);
       if (Array.isArray(data.descriptions)) allDescriptions.push(...data.descriptions);
+      if (Array.isArray(data.asset_properties)) allAssetProperties.push(...data.asset_properties);
 
       // Paginación
       const more = (data as any).more_items;
@@ -294,6 +313,12 @@ export async function getSteamInventory(steamId64?: string): Promise<ProcessedSk
       descIndex.set(`${d.classid}:${d.instanceid || '0'}`, d);
     }
 
+    // Índice de asset_properties por assetid
+    const propsIndex = new Map<string, AssetPropertyData>();
+    for (const prop of allAssetProperties) {
+      propsIndex.set(prop.assetid, prop);
+    }
+
     const processedItems: ProcessedSkin[] = allAssets
       .map(asset => {
         const key = `${asset.classid}:${asset.instanceid || '0'}`;
@@ -308,6 +333,23 @@ export async function getSteamInventory(steamId64?: string): Promise<ProcessedSk
         const isSouvenir = !!description.market_name?.includes('Souvenir');
         const stickers = parseStickers(description.descriptions);
         const charm = parseCharm(description.descriptions);
+
+        // Get float and pattern from asset_properties
+        const assetProps = propsIndex.get(asset.assetid);
+        let floatValue: number | undefined;
+        let patternTemplate: number | undefined;
+
+        if (assetProps?.asset_properties) {
+          const wearRating = assetProps.asset_properties.find(p => p.name === 'Wear Rating');
+          const pattern = assetProps.asset_properties.find(p => p.name === 'Pattern Template');
+
+          if (wearRating?.float_value !== undefined) {
+            floatValue = wearRating.float_value;
+          }
+          if (pattern?.int_value !== undefined) {
+            patternTemplate = pattern.int_value;
+          }
+        }
 
         return {
           assetid: asset.assetid,
@@ -327,6 +369,8 @@ export async function getSteamInventory(steamId64?: string): Promise<ProcessedSk
           marketable: description.marketable === 1,
           stickers,
           charm,
+          floatValue,
+          patternTemplate,
         } as ProcessedSkin;
       })
       .filter((x): x is ProcessedSkin => !!x)

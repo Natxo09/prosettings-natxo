@@ -157,8 +157,10 @@ export function SkinDetailModal({ skin, isOpen, onClose }: SkinDetailModalProps)
                     </p>
                   </div>
 
-                  {/* Wear Bar - Temporary with hardcoded value */}
-                  <WearBar floatValue={0.1606} />
+                  {/* Wear Bar - Only show if skin has float value */}
+                  {skin.floatValue !== undefined && (
+                    <WearBar floatValue={skin.floatValue} />
+                  )}
                 </div>
               </div>
             </div>
