@@ -13,23 +13,35 @@ export function Tooltip({ content, children }: TooltipProps) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const triggerRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+    // Detect if it's a touch device
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
   }, []);
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible || !isTouchDevice) return;
 
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (triggerRef.current && !triggerRef.current.contains(event.target as Node)) {
         setIsVisible(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isVisible]);
+    // Small delay to prevent the same click that opened the tooltip from closing it
+    const timeoutId = setTimeout(() => {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }, 150);
+
+    return () => {
+      clearTimeout(timeoutId);
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isVisible, isTouchDevice]);
 
   const updatePosition = () => {
     if (triggerRef.current) {
@@ -42,15 +54,20 @@ export function Tooltip({ content, children }: TooltipProps) {
   };
 
   const handleMouseEnter = () => {
+    if (isTouchDevice) return; // Don't trigger on touch devices
     updatePosition();
     setIsVisible(true);
   };
 
   const handleMouseLeave = () => {
+    if (isTouchDevice) return; // Don't trigger on touch devices
     setIsVisible(false);
   };
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    if (!isTouchDevice) return; // Only handle clicks on touch devices
+    e.preventDefault();
+    e.stopPropagation();
     updatePosition();
     setIsVisible(!isVisible);
   };
