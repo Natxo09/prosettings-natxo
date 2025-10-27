@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { Icon } from "@/components/icon";
+import Image from "next/image";
 
 interface CrosshairSettings {
   style: number;
@@ -15,6 +16,28 @@ interface CrosshairSettings {
   dot: boolean;
   tStyle?: boolean;
 }
+
+// CS2 crosshair color mappings
+const CROSSHAIR_COLORS: Record<number, string> = {
+  0: "#FF0000", // Red
+  1: "#00FF00", // Green
+  2: "#FFFF00", // Yellow
+  3: "#0000FF", // Blue
+  4: "#00FFFF", // Cyan
+  5: "#FFFFFF", // White
+};
+
+// Map screenshots
+const MAP_SCREENSHOTS = [
+  { name: "Dust 2", path: "/dust2.avif" },
+  { name: "Mirage", path: "/mirage.avif" },
+  { name: "Inferno", path: "/inferno.avif" },
+  { name: "Nuke", path: "/nuke.avif" },
+  { name: "Vertigo", path: "/vertigo.avif" },
+  { name: "Ancient", path: "/ancient.avif" },
+  { name: "Anubis", path: "/anubis.avif" },
+  { name: "Overpass", path: "/overpass.avif" },
+];
 
 const crosshairData: CrosshairSettings = {
   style: 4, // Classic Static
@@ -54,6 +77,9 @@ export function Crosshair() {
 
       {/* Content */}
       <div className="p-6 space-y-6">
+        {/* Crosshair Preview */}
+        <CrosshairPreview settings={crosshairData} />
+
         {/* Settings Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           <SettingItem label="Style" value={crosshairData.style} />
@@ -93,6 +119,201 @@ export function Crosshair() {
               )}
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface CrosshairPreviewProps {
+  settings: CrosshairSettings;
+}
+
+function CrosshairPreview({ settings }: CrosshairPreviewProps) {
+  const [currentMapIndex, setCurrentMapIndex] = useState(0);
+
+  // Crosshair configuration based on tested values
+  const CENTER_X = 454.5; // Center of 909 width
+  const CENTER_Y = 80; // Center of 160 height
+
+  // Fixed dimensions scaled up for better visibility
+  const gapFromCenter = 2.5; // Gap from center to lines (un poquito más pegado)
+  const lineLengthVertical = 4; // Line length vertical (arriba/abajo)
+  const lineLengthHorizontal = 5; // Line length horizontal (izq/der)
+  const thickness = 1.5; // Line thickness (un poquito más fino)
+  const outlineThickness = settings.outline > 0 ? 1.5 : 0;
+  const dotSize = 2; // Dot size
+
+  // Get color with alpha
+  const color = CROSSHAIR_COLORS[settings.color] || CROSSHAIR_COLORS[0];
+  const alpha = settings.alpha / 255;
+
+  const nextMap = () => {
+    setCurrentMapIndex((prev) => (prev + 1) % MAP_SCREENSHOTS.length);
+  };
+
+  const prevMap = () => {
+    setCurrentMapIndex((prev) =>
+      prev === 0 ? MAP_SCREENSHOTS.length - 1 : prev - 1
+    );
+  };
+
+  return (
+    <div className="relative w-full rounded-lg overflow-hidden border border-border bg-black">
+      {/* Map screenshot background */}
+      <div className="relative w-full" style={{ aspectRatio: '909/160' }}>
+        <Image
+          src={MAP_SCREENSHOTS[currentMapIndex].path}
+          alt={MAP_SCREENSHOTS[currentMapIndex].name}
+          fill
+          className="object-contain"
+          priority
+        />
+
+        {/* Crosshair overlay */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <svg
+            width="909"
+            height="160"
+            viewBox="0 0 909 160"
+            className="w-full h-full"
+          >
+            {/* Outline (if enabled) */}
+            {outlineThickness > 0 && (
+              <g opacity={alpha}>
+                {/* Top line outline */}
+                <line
+                  x1={CENTER_X}
+                  y1={CENTER_Y - gapFromCenter}
+                  x2={CENTER_X}
+                  y2={CENTER_Y - gapFromCenter - lineLengthVertical}
+                  stroke="black"
+                  strokeWidth={thickness + outlineThickness * 2}
+                  strokeLinecap="butt"
+                />
+                {/* Bottom line outline */}
+                <line
+                  x1={CENTER_X}
+                  y1={CENTER_Y + gapFromCenter}
+                  x2={CENTER_X}
+                  y2={CENTER_Y + gapFromCenter + lineLengthVertical}
+                  stroke="black"
+                  strokeWidth={thickness + outlineThickness * 2}
+                  strokeLinecap="butt"
+                />
+                {/* Left line outline */}
+                <line
+                  x1={CENTER_X - gapFromCenter}
+                  y1={CENTER_Y}
+                  x2={CENTER_X - gapFromCenter - lineLengthHorizontal}
+                  y2={CENTER_Y}
+                  stroke="black"
+                  strokeWidth={thickness + outlineThickness * 2}
+                  strokeLinecap="butt"
+                />
+                {/* Right line outline */}
+                <line
+                  x1={CENTER_X + gapFromCenter}
+                  y1={CENTER_Y}
+                  x2={CENTER_X + gapFromCenter + lineLengthHorizontal}
+                  y2={CENTER_Y}
+                  stroke="black"
+                  strokeWidth={thickness + outlineThickness * 2}
+                  strokeLinecap="butt"
+                />
+                {/* Center dot outline */}
+                {settings.dot && (
+                  <rect
+                    x={CENTER_X - dotSize / 2 - outlineThickness}
+                    y={CENTER_Y - dotSize / 2 - outlineThickness}
+                    width={dotSize + outlineThickness * 2}
+                    height={dotSize + outlineThickness * 2}
+                    rx={0.25}
+                    fill="black"
+                  />
+                )}
+              </g>
+            )}
+
+            {/* Main crosshair lines */}
+            <g opacity={alpha}>
+              {/* Top line - goes from center minus gap, upward */}
+              <line
+                x1={CENTER_X}
+                y1={CENTER_Y - gapFromCenter}
+                x2={CENTER_X}
+                y2={CENTER_Y - gapFromCenter - lineLengthVertical}
+                stroke={color}
+                strokeWidth={thickness}
+                strokeLinecap="butt"
+              />
+              {/* Bottom line - goes from center plus gap, downward */}
+              <line
+                x1={CENTER_X}
+                y1={CENTER_Y + gapFromCenter}
+                x2={CENTER_X}
+                y2={CENTER_Y + gapFromCenter + lineLengthVertical}
+                stroke={color}
+                strokeWidth={thickness}
+                strokeLinecap="butt"
+              />
+              {/* Left line - goes from center minus gap, leftward */}
+              <line
+                x1={CENTER_X - gapFromCenter}
+                y1={CENTER_Y}
+                x2={CENTER_X - gapFromCenter - lineLengthHorizontal}
+                y2={CENTER_Y}
+                stroke={color}
+                strokeWidth={thickness}
+                strokeLinecap="butt"
+              />
+              {/* Right line - goes from center plus gap, rightward */}
+              <line
+                x1={CENTER_X + gapFromCenter}
+                y1={CENTER_Y}
+                x2={CENTER_X + gapFromCenter + lineLengthHorizontal}
+                y2={CENTER_Y}
+                stroke={color}
+                strokeWidth={thickness}
+                strokeLinecap="butt"
+              />
+
+              {/* Center dot - rect with rounded corners */}
+              {settings.dot && (
+                <rect
+                  x={CENTER_X - dotSize / 2}
+                  y={CENTER_Y - dotSize / 2}
+                  width={dotSize}
+                  height={dotSize}
+                  rx={0.25}
+                  fill={color}
+                />
+              )}
+            </g>
+          </svg>
+        </div>
+
+        {/* Navigation buttons */}
+        <button
+          onClick={prevMap}
+          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors backdrop-blur-sm"
+          aria-label="Previous map"
+        >
+          <ChevronLeft size={24} />
+        </button>
+        <button
+          onClick={nextMap}
+          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors backdrop-blur-sm"
+          aria-label="Next map"
+        >
+          <ChevronRight size={24} />
+        </button>
+
+        {/* Map name indicator */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full">
+          <span className="text-white text-sm font-medium">
+            {MAP_SCREENSHOTS[currentMapIndex].name}
+          </span>
         </div>
       </div>
     </div>
