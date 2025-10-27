@@ -162,7 +162,7 @@ export function Skins() {
                   <span className="text-sm font-medium">Previous</span>
                 </button>
 
-                <span className="text-sm text-muted-foreground select-none">
+                <span className="text-sm text-muted-foreground select-none min-w-[120px] text-center">
                   Page {currentPage + 1} of {totalPages}
                 </span>
 
