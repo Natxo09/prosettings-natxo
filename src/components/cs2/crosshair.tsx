@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Copy, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { Icon } from "@/components/icon";
 import Image from "next/image";
+import gsap from "gsap";
 
 interface CrosshairSettings {
   style: number;
@@ -131,6 +132,10 @@ interface CrosshairPreviewProps {
 
 function CrosshairPreview({ settings }: CrosshairPreviewProps) {
   const [currentMapIndex, setCurrentMapIndex] = useState(0);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
 
   // Crosshair configuration based on tested values
   const CENTER_X = 454.5; // Center of 909 width
@@ -148,6 +153,17 @@ function CrosshairPreview({ settings }: CrosshairPreviewProps) {
   const color = CROSSHAIR_COLORS[settings.color] || CROSSHAIR_COLORS[0];
   const alpha = settings.alpha / 255;
 
+  useEffect(() => {
+    if (!sliderRef.current || !containerRef.current) return;
+
+    const containerWidth = containerRef.current.offsetWidth;
+    gsap.to(sliderRef.current, {
+      x: -currentMapIndex * containerWidth,
+      duration: 0.6,
+      ease: "power3.inOut"
+    });
+  }, [currentMapIndex]);
+
   const nextMap = () => {
     setCurrentMapIndex((prev) => (prev + 1) % MAP_SCREENSHOTS.length);
   };
@@ -158,17 +174,81 @@ function CrosshairPreview({ settings }: CrosshairPreviewProps) {
     );
   };
 
+  const goToMap = (index: number) => {
+    setCurrentMapIndex(index);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    isDraggingRef.current = true;
+    startXRef.current = e.clientX;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDraggingRef.current || !sliderRef.current || !containerRef.current) return;
+
+    const diff = e.clientX - startXRef.current;
+    const containerWidth = containerRef.current.offsetWidth;
+    const currentX = -currentMapIndex * containerWidth;
+
+    gsap.set(sliderRef.current, {
+      x: currentX + diff
+    });
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (!isDraggingRef.current) return;
+
+    const diff = e.clientX - startXRef.current;
+    isDraggingRef.current = false;
+
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        prevMap();
+      } else {
+        nextMap();
+      }
+    } else if (sliderRef.current && containerRef.current) {
+      const containerWidth = containerRef.current.offsetWidth;
+      gsap.to(sliderRef.current, {
+        x: -currentMapIndex * containerWidth,
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    }
+  };
+
   return (
     <div className="relative w-full rounded-lg overflow-hidden border border-border bg-black">
       {/* Map screenshot background */}
-      <div className="relative w-full" style={{ aspectRatio: '909/160' }}>
-        <Image
-          src={MAP_SCREENSHOTS[currentMapIndex].path}
-          alt={MAP_SCREENSHOTS[currentMapIndex].name}
-          fill
-          className="object-contain"
-          priority
-        />
+      <div
+        ref={containerRef}
+        className="relative w-full overflow-hidden select-none cursor-grab active:cursor-grabbing"
+        style={{ aspectRatio: '909/160' }}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      >
+        <div
+          ref={sliderRef}
+          className="flex h-full"
+        >
+          {MAP_SCREENSHOTS.map((map, index) => (
+            <div
+              key={index}
+              className="relative flex-shrink-0 w-full h-full"
+            >
+              <Image
+                src={map.path}
+                alt={map.name}
+                fill
+                className="object-contain pointer-events-none"
+                draggable={false}
+                priority={index === currentMapIndex}
+              />
+            </div>
+          ))}
+        </div>
 
         {/* Crosshair overlay */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -296,24 +376,33 @@ function CrosshairPreview({ settings }: CrosshairPreviewProps) {
         {/* Navigation buttons */}
         <button
           onClick={prevMap}
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors backdrop-blur-sm"
+          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors backdrop-blur-sm z-10 pointer-events-auto"
           aria-label="Previous map"
         >
           <ChevronLeft size={24} />
         </button>
         <button
           onClick={nextMap}
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors backdrop-blur-sm"
+          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors backdrop-blur-sm z-10 pointer-events-auto"
           aria-label="Next map"
         >
           <ChevronRight size={24} />
         </button>
 
-        {/* Map name indicator */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full">
-          <span className="text-white text-sm font-medium">
-            {MAP_SCREENSHOTS[currentMapIndex].name}
-          </span>
+        {/* Carousel dots indicator */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10 pointer-events-auto">
+          {MAP_SCREENSHOTS.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToMap(index)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                index === currentMapIndex
+                  ? "bg-white w-4"
+                  : "bg-white/50 hover:bg-white/75"
+              }`}
+              aria-label={`Go to map ${index + 1}`}
+            />
+          ))}
         </div>
       </div>
     </div>

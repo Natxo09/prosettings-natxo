@@ -1,0 +1,57 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo oscuro -->
+  <rect width="1920" height="1080" fill="#2a2a2a"/>
+
+  <g id="crosshair">
+    <!-- GAP = 3 pixels desde el centro, lineas de 5px -->
+
+    <!-- Línea superior (vertical arriba) -->
+    <line
+      x1="960"
+      y1="537"
+      x2="960"
+      y2="532"
+      stroke="#FF0000"
+      stroke-width="2"
+      stroke-linecap="butt"/>
+
+    <!-- Línea inferior (vertical abajo) -->
+    <line
+      x1="960"
+      y1="543"
+      x2="960"
+      y2="548"
+      stroke="#FF0000"
+      stroke-width="2"
+      stroke-linecap="butt"/>
+
+    <!-- Línea izquierda (horizontal izquierda) -->
+    <line
+      x1="957"
+      y1="540"
+      x2="952"
+      y2="540"
+      stroke="#FF0000"
+      stroke-width="2"
+      stroke-linecap="butt"/>
+
+    <!-- Línea derecha (horizontal derecha) -->
+    <line
+      x1="963"
+      y1="540"
+      x2="968"
+      y2="540"
+      stroke="#FF0000"
+      stroke-width="2"
+      stroke-linecap="butt"/>
+
+    <!-- Dot central (rectángulo redondeado, no círculo perfecto ni cuadrado) -->
+    <rect
+      x="959"
+      y="539"
+      width="2"
+      height="2"
+      rx="0.5"
+      fill="#FF0000"/>
+  </g>
+</svg>

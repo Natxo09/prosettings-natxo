@@ -1,0 +1,80 @@
+<svg width="909" height="160" viewBox="0 0 909 160" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background para ver el área -->
+  <rect width="909" height="160" fill="#1a1a1a"/>
+
+  <!-- Guía central (comentar después) -->
+  <circle cx="454.5" cy="80" r="1" fill="white" opacity="0.3"/>
+
+  <!-- Configuración del crosshair -->
+  <!--
+    Settings:
+    - size: 1.0
+    - gap: -2.5
+    - thickness: 0.5
+    - outline: 0
+    - color: Red (#FF0000)
+    - alpha: 255 (1.0)
+    - dot: true
+  -->
+
+  <!-- Variables calculadas -->
+  <!--
+    SCALE = 2
+    CENTER_X = 454.5
+    CENTER_Y = 80
+    lineLength = 1.0 * 10 = 10
+    gapFromCenter = -2.5 * 2 = -5
+    thickness = 0.5 * 2 = 1
+    dotSize = 1 * 0.8 = 0.8
+  -->
+
+  <!-- Crosshair lines -->
+  <g opacity="1">
+    <!-- Top line - desde center - gap hacia arriba -->
+    <line
+      x1="454.5"
+      y1="85"
+      x2="454.5"
+      y2="75"
+      stroke="#FF0000"
+      stroke-width="1"
+      stroke-linecap="flat"/>
+
+    <!-- Bottom line - desde center + gap hacia abajo -->
+    <line
+      x1="454.5"
+      y1="75"
+      x2="454.5"
+      y2="85"
+      stroke="#FF0000"
+      stroke-width="1"
+      stroke-linecap="flat"/>
+
+    <!-- Left line - desde center - gap hacia izquierda -->
+    <line
+      x1="459.5"
+      y1="80"
+      x2="449.5"
+      y2="80"
+      stroke="#FF0000"
+      stroke-width="1"
+      stroke-linecap="flat"/>
+
+    <!-- Right line - desde center + gap hacia derecha -->
+    <line
+      x1="449.5"
+      y1="80"
+      x2="459.5"
+      y2="80"
+      stroke="#FF0000"
+      stroke-width="1"
+      stroke-linecap="flat"/>
+
+    <!-- Center dot -->
+    <circle
+      cx="454.5"
+      cy="80"
+      r="0.8"
+      fill="#FF0000"/>
+  </g>
+</svg>
