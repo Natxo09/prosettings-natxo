@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Icon } from "./icon";
 import { Tooltip } from "./ui/tooltip";
+import { Spinner } from "./ui/spinner";
+import { LeetifyProfile } from "@/lib/leetify-api";
 
 const socialLinks = [
   {
@@ -33,6 +36,39 @@ const socialLinks = [
 ];
 
 export function Bio() {
+  const [profile, setProfile] = useState<LeetifyProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch('/api/leetify');
+        if (!response.ok) {
+          console.error('Failed to fetch Leetify profile');
+          setIsLoading(false);
+          return;
+        }
+        const data = await response.json();
+        setProfile(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        setIsLoading(false);
+      }
+    };
+
+    // Fetch immediately on mount
+    fetchProfile();
+
+    // Poll every 1 hour (3600000ms) for updates
+    // Server handles caching, so this just checks for new data
+    const pollInterval = setInterval(() => {
+      fetchProfile();
+    }, 3600000); // 1 hour
+
+    return () => clearInterval(pollInterval);
+  }, []);
+
   return (
     <div className="bg-card text-card-foreground p-6 sm:p-8 rounded-2xl shadow-lg">
       <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
@@ -85,15 +121,19 @@ export function Bio() {
                   fontSize: '30px',
                 }}
               >
-                <span
-                  style={{
-                    paddingLeft: '0.88rem',
-                    paddingTop: '0.47rem',
-                    display: 'block'
-                  }}
-                >
-                  20,000
-                </span>
+                {isLoading ? (
+                  <Spinner className="size-6" />
+                ) : (
+                  <span
+                    style={{
+                      paddingLeft: '0.88rem',
+                      paddingTop: '0.47rem',
+                      display: 'block'
+                    }}
+                  >
+                    {profile?.ranks?.premier?.toLocaleString() || '—'}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -101,26 +141,32 @@ export function Bio() {
             <div className="bg-background rounded-lg py-3 px-3 border border-border">
               {/* FACEIT Rating - same style as cs2-elo */}
               <div className="flex items-center gap-3">
-                <div
-                  className="bg-no-repeat flex-shrink-0"
-                  style={{
-                    backgroundImage: 'url(/icons/faceit-level-10.svg)',
-                    width: '40px',
-                    height: '40px',
-                    backgroundPosition: 'center',
-                    backgroundSize: 'contain',
-                  }}
-                />
-                <span
-                  className="font-bold"
-                  style={{
-                    color: '#EB4B4B',
-                    textShadow: '0 2px 0 black',
-                    fontSize: '30px',
-                  }}
-                >
-                  2,500
-                </span>
+                {isLoading ? (
+                  <Spinner className="size-6" />
+                ) : (
+                  <>
+                    <div
+                      className="bg-no-repeat flex-shrink-0"
+                      style={{
+                        backgroundImage: 'url(/icons/faceit-level-10.svg)',
+                        width: '40px',
+                        height: '40px',
+                        backgroundPosition: 'center',
+                        backgroundSize: 'contain',
+                      }}
+                    />
+                    <span
+                      className="font-bold"
+                      style={{
+                        color: '#EB4B4B',
+                        textShadow: '0 2px 0 black',
+                        fontSize: '30px',
+                      }}
+                    >
+                      {(profile?.ranks?.faceit_elo || 2323).toLocaleString()}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
           </div>
