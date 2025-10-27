@@ -3,6 +3,7 @@
 import { ThemeSwitcher } from "@/components/kibo-ui/theme-switcher";
 import { Bio } from "@/components/bio";
 import { Sidebar } from "@/components/sidebar";
+import { Crosshair } from "@/components/cs2/crosshair";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -48,10 +49,116 @@ export default function Home() {
             onSectionChange={setActiveSection}
           />
 
-          {/* Main Content */}
-          <main className="flex-1 w-full lg:w-auto">
-            {activeSection === "bio" && <Bio />}
-            {/* Aquí irán los demás componentes según la sección activa */}
+          {/* Main Content - Todas las secciones verticalmente */}
+          <main className="flex-1 w-full lg:w-auto space-y-8">
+            {/* Bio Section */}
+            <section id="bio">
+              <Bio />
+            </section>
+
+            {/* Crosshair Section */}
+            <section id="crosshair">
+              <Crosshair />
+            </section>
+
+            {/* Placeholder para las demás secciones */}
+            <section id="viewmodel">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">Viewmodel</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
+
+            <section id="launch-options">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">Launch Options</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
+
+            <section id="video-settings">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">Video Settings</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
+
+            <section id="hud">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">HUD</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
+
+            <section id="radar">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">Radar</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
+
+            <section id="skins">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">Skins</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
+
+            <section id="mouse">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">Mouse</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
+
+            <section id="monitor">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">Monitor</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
+
+            <section id="keyboard">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">Keyboard</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
+
+            <section id="headphones">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">Headphones</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
+
+            <section id="mic">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">Microphone</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
+
+            <section id="mousepad">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">Mousepad</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
+
+            <section id="pc-specs">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">PC Specifications</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
+
+            <section id="gpu-settings">
+              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold">GPU Settings</h2>
+                <p className="text-muted-foreground mt-2">Coming soon...</p>
+              </div>
+            </section>
           </main>
         </div>
       </div>

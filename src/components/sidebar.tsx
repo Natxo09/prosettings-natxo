@@ -67,6 +67,20 @@ export function Sidebar({ activeSection = "bio", onSectionChange }: SidebarProps
   const handleItemClick = (itemId: string) => {
     setActive(itemId);
     onSectionChange?.(itemId);
+
+    // Scroll suave a la sección
+    const element = document.getElementById(itemId);
+    if (element) {
+      const offset = 80; // Offset para el header
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+
     // Cerrar el sidebar en móvil al hacer click
     setIsOpen(false);
   };
@@ -91,6 +105,29 @@ export function Sidebar({ activeSection = "bio", onSectionChange }: SidebarProps
       document.body.style.overflow = "unset";
     }
   }, [isOpen]);
+
+  // Detectar sección visible al hacer scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = navigationSections.flatMap(section => section.items.map(item => item.id));
+
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          // Si la sección está visible en el viewport (con un margen)
+          if (rect.top <= 150 && rect.bottom >= 150) {
+            setActive(sectionId);
+            onSectionChange?.(sectionId);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [onSectionChange]);
 
   return (
     <>
