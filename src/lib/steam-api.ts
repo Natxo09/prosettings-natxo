@@ -57,6 +57,11 @@ export interface Sticker {
   image: string;
 }
 
+export interface Charm {
+  name: string;
+  image: string;
+}
+
 export interface ProcessedSkin {
   assetid: string;
   name: string;
@@ -72,6 +77,7 @@ export interface ProcessedSkin {
   tradable: boolean;
   marketable: boolean;
   stickers: Sticker[];
+  charm?: Charm;
 }
 
 /**
@@ -98,6 +104,31 @@ function parseStickers(descriptions: SteamInventoryDescription['descriptions']):
   }
 
   return stickers;
+}
+
+/**
+ * Parse charm (keychain) from HTML description
+ */
+function parseCharm(descriptions: SteamInventoryDescription['descriptions']): Charm | undefined {
+  if (!descriptions) return undefined;
+
+  const keychainInfo = descriptions.find(d => d.name === 'keychain_info');
+  if (!keychainInfo || !keychainInfo.value) return undefined;
+
+  const html = keychainInfo.value;
+
+  // Regex to extract img tag with src and title
+  const imgRegex = /<img[^>]+src="([^"]+)"[^>]+title="([^"]+)"/;
+  const match = imgRegex.exec(html);
+
+  if (match) {
+    return {
+      image: match[1],
+      name: match[2].replace('Charm: ', ''), // Remove "Charm: " prefix
+    };
+  }
+
+  return undefined;
 }
 
 /**
@@ -275,6 +306,7 @@ export async function getSteamInventory(steamId64?: string): Promise<ProcessedSk
         const isStatTrak = !!description.market_name?.includes('StatTrak™');
         const isSouvenir = !!description.market_name?.includes('Souvenir');
         const stickers = parseStickers(description.descriptions);
+        const charm = parseCharm(description.descriptions);
 
         return {
           assetid: asset.assetid,
@@ -293,6 +325,7 @@ export async function getSteamInventory(steamId64?: string): Promise<ProcessedSk
           tradable: description.tradable === 1,
           marketable: description.marketable === 1,
           stickers,
+          charm,
         } as ProcessedSkin;
       })
       .filter((x): x is ProcessedSkin => !!x)

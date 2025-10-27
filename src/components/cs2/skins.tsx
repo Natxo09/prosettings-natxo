@@ -152,6 +152,23 @@ export function Skins() {
                       </div>
                     )}
 
+                    {/* Charm - Bottom right */}
+                    {skin.charm && (
+                      <div className="absolute right-1 sm:right-2 bottom-1 sm:bottom-2">
+                        <Tooltip content={skin.charm.name}>
+                          <div className="relative w-8 h-6 sm:w-10 sm:h-8 lg:w-12 lg:h-9 hover:scale-110 transition-transform cursor-help">
+                            <Image
+                              src={skin.charm.image}
+                              alt={skin.charm.name}
+                              fill
+                              className="object-contain drop-shadow-md"
+                              unoptimized
+                            />
+                          </div>
+                        </Tooltip>
+                      </div>
+                    )}
+
                     {/* StatTrak/Souvenir Badge */}
                     {(skin.statTrak || skin.souvenir) && (
                       <div className={`absolute top-2 right-2 text-xs font-bold px-2 py-1 rounded ${
