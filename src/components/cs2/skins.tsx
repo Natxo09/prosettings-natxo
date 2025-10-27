@@ -7,12 +7,15 @@ import { Icon } from "@/components/icon";
 import { Spinner } from "@/components/ui/spinner";
 import { Tooltip } from "@/components/ui/tooltip";
 import { ProcessedSkin } from "@/lib/steam-api";
+import { SkinDetailModal } from "./skin-detail-modal";
 
 export function Skins() {
   const [skins, setSkins] = useState<ProcessedSkin[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedSkin, setSelectedSkin] = useState<ProcessedSkin | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Detect mobile breakpoint
   useEffect(() => {
@@ -65,6 +68,16 @@ export function Skins() {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
+  };
+
+  const handleSkinClick = (skin: ProcessedSkin) => {
+    setSelectedSkin(skin);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => setSelectedSkin(null), 300); // Clear after animation
   };
 
   const getRarityColor = (rarityColor?: string): string => {
@@ -120,7 +133,17 @@ export function Skins() {
               {currentSkins.map((skin) => (
                 <div
                   key={skin.assetid}
+                  onClick={() => handleSkinClick(skin)}
                   className={`bg-background rounded-lg border-2 ${getRarityColor(skin.rarity_color)} hover:scale-105 transition-transform duration-200 cursor-pointer group overflow-visible`}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleSkinClick(skin);
+                    }
+                  }}
+                  aria-label={`View details for ${skin.market_name}`}
                 >
                   {/* Image Container */}
                   <div className="relative aspect-square bg-gradient-to-br from-background to-muted p-4 flex items-center justify-center overflow-visible rounded-t-lg">
@@ -230,6 +253,13 @@ export function Skins() {
           </>
         )}
       </div>
+
+      {/* Skin Detail Modal */}
+      <SkinDetailModal
+        skin={selectedSkin}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 }
