@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import { Icon } from "@/components/icon";
@@ -103,7 +103,20 @@ const workshopMaps: WorkshopMap[] = [
 
 export function Workshop() {
   const [currentPage, setCurrentPage] = useState(0);
-  const ITEMS_PER_PAGE = 6;
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile breakpoint (< 1024px = lg breakpoint)
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const ITEMS_PER_PAGE = isMobile ? 4 : 6;
 
   // Calculate pagination
   const totalPages = Math.ceil(workshopMaps.length / ITEMS_PER_PAGE);
@@ -149,7 +162,7 @@ export function Workshop() {
 
       {/* Content */}
       <div className="p-6 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
           {currentMaps.map((map, index) => (
             <button
               key={index}
@@ -180,7 +193,7 @@ export function Workshop() {
                 <h3 className="font-semibold text-foreground mb-1 line-clamp-1">
                   {map.name}
                 </h3>
-                <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                <p className="hidden md:block text-sm text-muted-foreground line-clamp-2 mb-3">
                   {map.description}
                 </p>
 
