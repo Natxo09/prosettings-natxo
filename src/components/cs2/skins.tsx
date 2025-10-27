@@ -77,8 +77,8 @@ export function Skins() {
     setSelectedSkin(skin);
     setIsModalOpen(true);
     trackEvent("Skin Detail Opened", {
-      skin: skin.marketName,
-      wear: skin.wearName || "Unknown"
+      skin: skin.market_name,
+      wear: skin.exterior || "Unknown"
     });
   };
 
