@@ -4,6 +4,7 @@ import { ThemeSwitcher } from "@/components/kibo-ui/theme-switcher";
 import { Bio } from "@/components/bio";
 import { Sidebar } from "@/components/sidebar";
 import { Crosshair } from "@/components/cs2/crosshair";
+import { Icon } from "@/components/icon";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -33,8 +34,12 @@ export default function Home() {
   return (
     <div className="min-h-screen p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header con Theme Switcher */}
-        <div className="flex justify-end items-center mb-8 pl-14 lg:pl-0">
+        {/* Header con Logo CS2 y Theme Switcher */}
+        <div className="flex justify-between items-center mb-8 pl-14 lg:pl-0">
+          <div className="flex items-center gap-3">
+            <Icon name="cs2" size={32} className="text-foreground" />
+            <h1 className="text-xl font-bold text-foreground">Settings</h1>
+          </div>
           <ThemeSwitcher
             value={theme as "light" | "dark" | "system"}
             onChange={handleThemeChange}
