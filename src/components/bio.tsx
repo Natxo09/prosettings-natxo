@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { Info } from "lucide-react";
 import { Icon } from "./icon";
 import { Tooltip } from "./ui/tooltip";
 import { Spinner } from "./ui/spinner";
@@ -120,14 +121,7 @@ export function Bio() {
                 draggable={false}
               />
               <Tooltip content={lastUpdated ? `Updated: ${lastUpdated.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}` : 'Loading...'}>
-                <Image
-                  src="/icons/info.svg"
-                  alt="Last updated info"
-                  width={20}
-                  height={20}
-                  className="select-none cursor-help opacity-60 hover:opacity-100 transition-opacity"
-                  draggable={false}
-                />
+                <Info className="size-5 cursor-help opacity-60 hover:opacity-100 transition-opacity" />
               </Tooltip>
             </div>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface TooltipProps {
   content: string;
@@ -9,25 +10,61 @@ interface TooltipProps {
 
 export function Tooltip({ content, children }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const handleMouseEnter = () => {
+    if (triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setPosition({
+        x: rect.left + rect.width / 2,
+        y: rect.top,
+      });
+      setIsVisible(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsVisible(false);
+  };
+
+  const tooltip = isVisible && isMounted && typeof window !== 'undefined' ? (
+    <div
+      className="fixed px-3 py-1.5 bg-popover text-popover-foreground rounded-lg shadow-xl whitespace-nowrap border border-border/50 pointer-events-none"
+      style={{
+        left: `${position.x}px`,
+        top: `${position.y - 8}px`,
+        transform: 'translate(-50%, -100%)',
+        zIndex: 9999,
+      }}
+    >
+      <span className="text-xs font-medium">{content}</span>
+      {/* Arrow pointing down */}
+      <div
+        className="absolute left-1/2 top-full -translate-x-1/2"
+      >
+        <div className="border-[5px] border-transparent border-t-popover -mb-[1px]"></div>
+      </div>
+    </div>
+  ) : null;
 
   return (
-    <div
-      className="relative inline-flex"
-      onMouseEnter={() => setIsVisible(true)}
-      onMouseLeave={() => setIsVisible(false)}
-    >
-      {children}
-      {isVisible && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 pointer-events-none animate-in fade-in-0 zoom-in-95 duration-200">
-          <div className="px-3 py-1.5 bg-background border border-border rounded-lg shadow-lg whitespace-nowrap">
-            <span className="text-sm font-medium text-foreground">{content}</span>
-          </div>
-          {/* Arrow */}
-          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2">
-            <div className="w-3 h-3 bg-background border-r border-b border-border rotate-45" />
-          </div>
-        </div>
-      )}
-    </div>
+    <>
+      <div
+        ref={triggerRef}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="inline-flex"
+        title={content}
+      >
+        {children}
+      </div>
+      {isMounted && tooltip && createPortal(tooltip, document.body)}
+    </>
   );
 }

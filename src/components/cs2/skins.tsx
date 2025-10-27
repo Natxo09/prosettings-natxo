@@ -5,14 +5,27 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Icon } from "@/components/icon";
 import { Spinner } from "@/components/ui/spinner";
+import { Tooltip } from "@/components/ui/tooltip";
 import { ProcessedSkin } from "@/lib/steam-api";
-
-const ITEMS_PER_PAGE = 8; // 2 rows x 4 columns
 
 export function Skins() {
   const [skins, setSkins] = useState<ProcessedSkin[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile breakpoint
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024); // lg breakpoint
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const ITEMS_PER_PAGE = isMobile ? 4 : 8; // Mobile: 2x2=4, Desktop: 2x4=8
 
   useEffect(() => {
     const fetchSkins = async () => {
@@ -102,15 +115,15 @@ export function Skins() {
           </div>
         ) : (
           <>
-            {/* Skins Grid - 2 rows x 4 columns */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {/* Skins Grid - 2x2 mobile, 2x4 desktop */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {currentSkins.map((skin) => (
                 <div
                   key={skin.assetid}
-                  className={`bg-background rounded-lg border-2 ${getRarityColor(skin.rarity_color)} overflow-hidden hover:scale-105 transition-transform duration-200 cursor-pointer group`}
+                  className={`bg-background rounded-lg border-2 ${getRarityColor(skin.rarity_color)} hover:scale-105 transition-transform duration-200 cursor-pointer group overflow-visible`}
                 >
                   {/* Image Container */}
-                  <div className="relative aspect-square bg-gradient-to-br from-background to-muted p-4 flex items-center justify-center">
+                  <div className="relative aspect-square bg-gradient-to-br from-background to-muted p-4 flex items-center justify-center overflow-visible rounded-t-lg">
                     <Image
                       src={skin.image_large}
                       alt={skin.market_name}
@@ -119,6 +132,26 @@ export function Skins() {
                       className="object-contain drop-shadow-xl group-hover:scale-110 transition-transform duration-200"
                       unoptimized
                     />
+
+                    {/* Stickers - Vertical on left side */}
+                    {skin.stickers && skin.stickers.length > 0 && (
+                      <div className="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 flex flex-col gap-1">
+                        {skin.stickers.map((sticker, idx) => (
+                          <Tooltip key={idx} content={sticker.name}>
+                            <div className="relative w-6 h-5 sm:w-8 sm:h-6 lg:w-10 lg:h-8 hover:scale-110 transition-transform cursor-help">
+                              <Image
+                                src={sticker.image}
+                                alt={sticker.name}
+                                fill
+                                className="object-contain drop-shadow-md"
+                                unoptimized
+                              />
+                            </div>
+                          </Tooltip>
+                        ))}
+                      </div>
+                    )}
+
                     {/* StatTrak/Souvenir Badge */}
                     {(skin.statTrak || skin.souvenir) && (
                       <div className={`absolute top-2 right-2 text-xs font-bold px-2 py-1 rounded ${

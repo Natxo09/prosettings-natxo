@@ -52,6 +52,11 @@ export interface SteamInventoryResponse {
   rwgrsn: number;
 }
 
+export interface Sticker {
+  name: string;
+  image: string;
+}
+
 export interface ProcessedSkin {
   assetid: string;
   name: string;
@@ -66,6 +71,33 @@ export interface ProcessedSkin {
   souvenir: boolean;
   tradable: boolean;
   marketable: boolean;
+  stickers: Sticker[];
+}
+
+/**
+ * Parse stickers from HTML description
+ */
+function parseStickers(descriptions: SteamInventoryDescription['descriptions']): Sticker[] {
+  if (!descriptions) return [];
+
+  const stickerInfo = descriptions.find(d => d.name === 'sticker_info');
+  if (!stickerInfo || !stickerInfo.value) return [];
+
+  const stickers: Sticker[] = [];
+  const html = stickerInfo.value;
+
+  // Regex to extract img tags with src and title
+  const imgRegex = /<img[^>]+src="([^"]+)"[^>]+title="([^"]+)"/g;
+  let match;
+
+  while ((match = imgRegex.exec(html)) !== null) {
+    stickers.push({
+      image: match[1],
+      name: match[2].replace('Sticker: ', ''), // Remove "Sticker: " prefix
+    });
+  }
+
+  return stickers;
 }
 
 /**
@@ -242,6 +274,7 @@ export async function getSteamInventory(steamId64?: string): Promise<ProcessedSk
 
         const isStatTrak = !!description.market_name?.includes('StatTrak™');
         const isSouvenir = !!description.market_name?.includes('Souvenir');
+        const stickers = parseStickers(description.descriptions);
 
         return {
           assetid: asset.assetid,
@@ -259,6 +292,7 @@ export async function getSteamInventory(steamId64?: string): Promise<ProcessedSk
           souvenir: isSouvenir,
           tradable: description.tradable === 1,
           marketable: description.marketable === 1,
+          stickers,
         } as ProcessedSkin;
       })
       .filter((x): x is ProcessedSkin => !!x)
