@@ -68,33 +68,60 @@ export function Bio() {
           </div>
 
           {/* ELO Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
             {/* CS2 Premier ELO */}
-            <div className="bg-background rounded-lg p-4 border border-border">
-              <div className="flex items-center gap-2 mb-1">
-                <Icon name="cs2" size={20} className="text-foreground/70" />
+            <div className="bg-background rounded-lg py-3 px-3 border border-border">
+              {/* Premier Rating - same style as cs2-elo */}
+              <div
+                className="flex items-center justify-center bg-no-repeat font-bold italic"
+                style={{
+                  backgroundImage: 'url(/icons/ancient.png)',
+                  color: '#EB4B4B',
+                  textShadow: '0 2px 0 black',
+                  width: '140px',
+                  height: '48px',
+                  backgroundPosition: 'center',
+                  backgroundSize: 'contain',
+                  fontSize: '30px',
+                }}
+              >
+                <span
+                  style={{
+                    paddingLeft: '0.88rem',
+                    paddingTop: '0.47rem',
+                    display: 'block'
+                  }}
+                >
+                  20,000
+                </span>
               </div>
-              <div className="text-2xl font-bold">20,000</div>
-              <div className="text-xs text-foreground/50 mt-1">Rating</div>
             </div>
 
             {/* FACEIT */}
-            <div className="bg-background rounded-lg p-4 border border-border">
-              <div className="flex items-center gap-2 mb-1">
-                <Image
-                  src="/icons/faceit-pheasant.png"
-                  alt="FACEIT"
-                  width={20}
-                  height={20}
-                  className="select-none"
-                  draggable={false}
+            <div className="bg-background rounded-lg py-3 px-3 border border-border">
+              {/* FACEIT Rating - same style as cs2-elo */}
+              <div className="flex items-center gap-3">
+                <div
+                  className="bg-no-repeat flex-shrink-0"
+                  style={{
+                    backgroundImage: 'url(/icons/faceit-level-10.svg)',
+                    width: '40px',
+                    height: '40px',
+                    backgroundPosition: 'center',
+                    backgroundSize: 'contain',
+                  }}
                 />
-                <span className="text-xs uppercase tracking-wider text-foreground/60 font-medium">
-                  FACEIT
+                <span
+                  className="font-bold"
+                  style={{
+                    color: '#EB4B4B',
+                    textShadow: '0 2px 0 black',
+                    fontSize: '30px',
+                  }}
+                >
+                  2,500
                 </span>
               </div>
-              <div className="text-2xl font-bold">Level 10</div>
-              <div className="text-xs text-foreground/50 mt-1">2,500 ELO</div>
             </div>
           </div>
 
