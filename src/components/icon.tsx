@@ -147,11 +147,7 @@ const icons = {
   ),
   gpu: (
     <>
-      <path d="M5 5a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1v-6z" />
-      <path d="M16 16h2a1 1 0 0 1 1 1v1a1 1 0 0 1 -1 1h-14a1 1 0 0 1 -1 -1v-1a1 1 0 0 1 1 -1h2" />
-      <path d="M8 12v4" />
-      <path d="M11 12v4" />
-      <path d="M14 12v4" />
+      <path d="M232,48H16a8,8,0,0,0-8,8V208a8,8,0,0,0,16,0V192H40v16a8,8,0,0,0,16,0V192H72v16a8,8,0,0,0,16,0V192h16v16a8,8,0,0,0,16,0V192H232a16,16,0,0,0,16-16V64A16,16,0,0,0,232,48Zm0,128H24V64H232Zm-56-16a40,40,0,1,0-40-40A40,40,0,0,0,176,160Zm-24-40a23.74,23.74,0,0,1,2.35-10.34l32,32A23.74,23.74,0,0,1,176,144,24,24,0,0,1,152,120Zm48,0a23.74,23.74,0,0,1-2.35,10.34l-32-32A23.74,23.74,0,0,1,176,96,24,24,0,0,1,200,120ZM80,160a40,40,0,1,0-40-40A40,40,0,0,0,80,160ZM56,120a23.74,23.74,0,0,1,2.35-10.34l32,32A23.74,23.74,0,0,1,80,144,24,24,0,0,1,56,120Zm48,0a23.74,23.74,0,0,1-2.35,10.34l-32-32A23.74,23.74,0,0,1,80,96,24,24,0,0,1,104,120Z" />
     </>
   ),
   user: (
@@ -186,6 +182,23 @@ export function Icon({ name, size = 24, className = "", ...props }: IconProps) {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        className={className}
+        {...props}
+      >
+        {icons[name]}
+      </svg>
+    );
+  }
+
+  // Special case for GPU icon with different viewBox
+  if (name === "gpu") {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="0 0 256 256"
+        fill="currentColor"
         className={className}
         {...props}
       >
