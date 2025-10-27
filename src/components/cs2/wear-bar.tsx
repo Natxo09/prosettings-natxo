@@ -2,6 +2,7 @@
 
 interface WearBarProps {
   floatValue: number;
+  patternTemplate?: number;
   className?: string;
 }
 
@@ -14,7 +15,7 @@ const WEAR_RANGES = [
   { name: "Battle-Scarred", short: "BS", min: 0.45, max: 1.00, color: "#F92525", width: 55 },
 ];
 
-export function WearBar({ floatValue, className = "" }: WearBarProps) {
+export function WearBar({ floatValue, patternTemplate, className = "" }: WearBarProps) {
   // Clamp float value between 0 and 1
   const clampedFloat = Math.max(0, Math.min(1, floatValue));
 
@@ -33,6 +34,11 @@ export function WearBar({ floatValue, className = "" }: WearBarProps) {
         <span className="text-sm font-semibold text-foreground">
           Float Value: <span style={{ color: currentRange.color }}>{clampedFloat.toFixed(4)}</span>
         </span>
+        {patternTemplate !== undefined && (
+          <span className="text-sm font-semibold text-muted-foreground">
+            Pattern: <span className="text-foreground">{patternTemplate}</span>
+          </span>
+        )}
       </div>
 
       {/* Wear bar */}

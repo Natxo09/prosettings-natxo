@@ -159,7 +159,16 @@ export function SkinDetailModal({ skin, isOpen, onClose }: SkinDetailModalProps)
 
                   {/* Wear Bar - Only show if skin has float value */}
                   {skin.floatValue !== undefined && (
-                    <WearBar floatValue={skin.floatValue} />
+                    <WearBar floatValue={skin.floatValue} patternTemplate={skin.patternTemplate} />
+                  )}
+
+                  {/* Pattern only (for charms without float) */}
+                  {skin.floatValue === undefined && skin.patternTemplate !== undefined && (
+                    <div className="pt-2 border-t border-border">
+                      <span className="text-sm font-semibold text-muted-foreground">
+                        Pattern: <span className="text-foreground">{skin.patternTemplate}</span>
+                      </span>
+                    </div>
                   )}
                 </div>
               </div>

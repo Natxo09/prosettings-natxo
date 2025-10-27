@@ -342,12 +342,16 @@ export async function getSteamInventory(steamId64?: string): Promise<ProcessedSk
         if (assetProps?.asset_properties) {
           const wearRating = assetProps.asset_properties.find(p => p.name === 'Wear Rating');
           const pattern = assetProps.asset_properties.find(p => p.name === 'Pattern Template');
+          const charmTemplate = assetProps.asset_properties.find(p => p.name === 'Charm Template');
 
           if (wearRating?.float_value !== undefined) {
             floatValue = wearRating.float_value;
           }
+          // Use Pattern Template for skins or Charm Template for charms
           if (pattern?.int_value !== undefined) {
             patternTemplate = pattern.int_value;
+          } else if (charmTemplate?.int_value !== undefined) {
+            patternTemplate = charmTemplate.int_value;
           }
         }
 
