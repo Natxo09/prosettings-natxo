@@ -9,7 +9,7 @@ import { trackEvent } from "@/lib/analytics";
 type NavItem = {
   id: string;
   label: string;
-  icon: "user" | "crosshair" | "viewmodel" | "launch" | "video" | "hud" | "radar" | "knife" | "mouse" | "monitor" | "keyboard" | "headphones" | "mic" | "mousepad" | "cpu" | "gpu";
+  icon: "user" | "crosshair" | "viewmodel" | "launch" | "video" | "hud" | "radar" | "knife" | "workshop" | "mouse" | "monitor" | "keyboard" | "headphones" | "mic" | "mousepad" | "cpu" | "gpu";
 };
 
 type NavSection = {
@@ -34,6 +34,7 @@ const navigationSections: NavSection[] = [
       { id: "hud", label: "HUD", icon: "hud" },
       { id: "radar", label: "Radar", icon: "radar" },
       { id: "skins", label: "Skins", icon: "knife" },
+      { id: "workshop", label: "Workshop", icon: "workshop" },
     ],
   },
   {

@@ -10,6 +10,7 @@ import { VideoSettings } from "@/components/cs2/video-settings";
 import { Hud } from "@/components/cs2/hud";
 import { Radar } from "@/components/cs2/radar";
 import { Skins } from "@/components/cs2/skins";
+import { Workshop } from "@/components/cs2/workshop";
 import { Mouse } from "@/components/setup/mouse";
 import { Monitor } from "@/components/setup/monitor";
 import { Keyboard } from "@/components/setup/keyboard";
@@ -110,6 +111,11 @@ export default function Home() {
 
             <section id="skins">
               <Skins />
+            </section>
+
+            {/* Workshop Section */}
+            <section id="workshop">
+              <Workshop />
             </section>
 
             {/* Mouse Section */}

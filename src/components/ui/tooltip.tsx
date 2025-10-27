@@ -13,20 +13,19 @@ export function Tooltip({ content, children }: TooltipProps) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const triggerRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [isClickMode, setIsClickMode] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
-    // Detect if it's a touch device
-    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
   }, []);
 
   useEffect(() => {
-    if (!isVisible || !isTouchDevice) return;
+    if (!isVisible || !isClickMode) return;
 
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (triggerRef.current && !triggerRef.current.contains(event.target as Node)) {
         setIsVisible(false);
+        setIsClickMode(false);
       }
     };
 
@@ -41,7 +40,7 @@ export function Tooltip({ content, children }: TooltipProps) {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
     };
-  }, [isVisible, isTouchDevice]);
+  }, [isVisible, isClickMode]);
 
   const updatePosition = () => {
     if (triggerRef.current) {
@@ -54,21 +53,20 @@ export function Tooltip({ content, children }: TooltipProps) {
   };
 
   const handleMouseEnter = () => {
-    if (isTouchDevice) return; // Don't trigger on touch devices
+    if (isClickMode) return; // Don't trigger hover if in click mode
     updatePosition();
     setIsVisible(true);
   };
 
   const handleMouseLeave = () => {
-    if (isTouchDevice) return; // Don't trigger on touch devices
+    if (isClickMode) return; // Don't hide on leave if in click mode
     setIsVisible(false);
   };
 
   const handleClick = (e: React.MouseEvent) => {
-    if (!isTouchDevice) return; // Only handle clicks on touch devices
-    e.preventDefault();
     e.stopPropagation();
     updatePosition();
+    setIsClickMode(true);
     setIsVisible(!isVisible);
   };
 
