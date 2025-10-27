@@ -111,6 +111,21 @@ export function Sidebar({ activeSection = "bio", onSectionChange }: SidebarProps
     const handleScroll = () => {
       const sections = navigationSections.flatMap(section => section.items.map(item => item.id));
 
+      // Detectar si estamos en el fondo de la página
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight;
+
+      // Si estamos en el fondo (dentro de 10px), activar la última sección
+      if (scrollHeight - scrollTop - clientHeight < 10) {
+        const lastSectionId = sections[sections.length - 1];
+        setActive(lastSectionId);
+        onSectionChange?.(lastSectionId);
+        return;
+      }
+
+      // Lógica normal de detección de sección visible
+      let foundSection = false;
       for (const sectionId of sections) {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -119,9 +134,32 @@ export function Sidebar({ activeSection = "bio", onSectionChange }: SidebarProps
           if (rect.top <= 150 && rect.bottom >= 150) {
             setActive(sectionId);
             onSectionChange?.(sectionId);
+            foundSection = true;
             break;
           }
         }
+      }
+
+      // Si no se encontró ninguna sección visible, buscar la más cercana al top
+      if (!foundSection) {
+        let closestSection = sections[0];
+        let closestDistance = Infinity;
+
+        for (const sectionId of sections) {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            const rect = element.getBoundingClientRect();
+            const distance = Math.abs(rect.top - 150);
+
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              closestSection = sectionId;
+            }
+          }
+        }
+
+        setActive(closestSection);
+        onSectionChange?.(closestSection);
       }
     };
 
