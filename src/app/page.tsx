@@ -49,15 +49,17 @@ export default function Home() {
     <div className="min-h-screen flex flex-col pt-4 px-4 sm:pt-8 sm:px-8">
       <div className="max-w-7xl mx-auto flex-1 w-full">
         {/* Header con Logo CS2 y Theme Switcher */}
-        <div className="flex justify-between items-center mb-8 pl-14 lg:pl-0">
-          <div className="flex items-center gap-3">
-            <Icon name="cs2" size={32} className="text-foreground" />
-            <h1 className="text-xl font-bold text-foreground">Settings</h1>
+        <div className="flex justify-between items-center mb-6 sm:mb-8 pl-12 lg:pl-0 gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+            <Icon name="cs2" size={26} className="text-foreground sm:h-8 flex-shrink-0" />
+            <h1 className="text-base sm:text-xl font-bold text-foreground truncate">Settings</h1>
           </div>
-          <ThemeSwitcher
-            value={theme as "light" | "dark" | "system"}
-            onChange={handleThemeChange}
-          />
+          <div className="flex-shrink-0">
+            <ThemeSwitcher
+              value={theme as "light" | "dark" | "system"}
+              onChange={handleThemeChange}
+            />
+          </div>
         </div>
 
         {/* Layout con Sidebar y Contenido */}
