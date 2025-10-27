@@ -2,12 +2,18 @@
 
 import Image from "next/image";
 import { Icon } from "./icon";
+import { Tooltip } from "./ui/tooltip";
 
 const socialLinks = [
   {
     name: "Steam",
     icon: "steam" as const,
     url: "https://steamcommunity.com/id/natxxo",
+  },
+  {
+    name: "FACEIT",
+    icon: "faceit" as const,
+    url: "https://www.faceit.com/en/players/VGNatxo",
   },
   {
     name: "Twitch",
@@ -49,20 +55,32 @@ export function Footer() {
         {/* Social Links */}
         <div className="flex gap-4">
           {socialLinks.map((social) => (
-            <a
-              key={social.name}
-              href={social.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-background/80 hover:bg-background hover:scale-110 transition-all duration-200 text-foreground/70 hover:text-foreground"
-              aria-label={social.name}
-            >
-              <Icon
-                name={social.icon}
-                size={20}
-                className="transition-all duration-200"
-              />
-            </a>
+            <Tooltip key={social.name} content={social.name}>
+              <a
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-background/80 hover:bg-background hover:scale-110 transition-all duration-200 text-foreground/70 hover:text-foreground"
+                aria-label={social.name}
+              >
+                {social.icon === "faceit" ? (
+                  <Image
+                    src="/icons/faceit-pheasant.png"
+                    alt="FACEIT"
+                    width={20}
+                    height={20}
+                    className="select-none transition-all duration-200"
+                    draggable={false}
+                  />
+                ) : (
+                  <Icon
+                    name={social.icon}
+                    size={20}
+                    className="transition-all duration-200"
+                  />
+                )}
+              </a>
+            </Tooltip>
           ))}
         </div>
 
