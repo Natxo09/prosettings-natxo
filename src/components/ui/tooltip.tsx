@@ -18,19 +18,41 @@ export function Tooltip({ content, children }: TooltipProps) {
     setIsMounted(true);
   }, []);
 
-  const handleMouseEnter = () => {
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (triggerRef.current && !triggerRef.current.contains(event.target as Node)) {
+        setIsVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isVisible]);
+
+  const updatePosition = () => {
     if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
       setPosition({
         x: rect.left + rect.width / 2,
         y: rect.top,
       });
-      setIsVisible(true);
     }
+  };
+
+  const handleMouseEnter = () => {
+    updatePosition();
+    setIsVisible(true);
   };
 
   const handleMouseLeave = () => {
     setIsVisible(false);
+  };
+
+  const handleClick = () => {
+    updatePosition();
+    setIsVisible(!isVisible);
   };
 
   const tooltip = isVisible && isMounted && typeof window !== 'undefined' ? (
@@ -59,7 +81,8 @@ export function Tooltip({ content, children }: TooltipProps) {
         ref={triggerRef}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="inline-flex"
+        onClick={handleClick}
+        className="inline-flex cursor-pointer"
         title={content}
       >
         {children}

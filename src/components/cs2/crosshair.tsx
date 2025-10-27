@@ -236,8 +236,7 @@ function CrosshairPreview({ settings }: CrosshairPreviewProps) {
       {/* Map screenshot background */}
       <div
         ref={containerRef}
-        className="relative w-full overflow-hidden select-none cursor-grab active:cursor-grabbing h-[200px] sm:h-auto"
-        style={{ aspectRatio: 'auto sm:909/160' }}
+        className="relative w-full overflow-hidden select-none cursor-grab active:cursor-grabbing h-[200px] sm:h-auto sm:aspect-[909/160]"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
