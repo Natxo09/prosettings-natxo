@@ -9,6 +9,7 @@ import { LaunchOptions } from "@/components/cs2/launch-options";
 import { VideoSettings } from "@/components/cs2/video-settings";
 import { Hud } from "@/components/cs2/hud";
 import { Radar } from "@/components/cs2/radar";
+import { Skins } from "@/components/cs2/skins";
 import { Mouse } from "@/components/setup/mouse";
 import { Monitor } from "@/components/setup/monitor";
 import { Keyboard } from "@/components/setup/keyboard";
@@ -108,10 +109,7 @@ export default function Home() {
             </section>
 
             <section id="skins">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">Skins</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <Skins />
             </section>
 
             {/* Mouse Section */}
