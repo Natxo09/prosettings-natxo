@@ -205,7 +205,7 @@ export function Skins() {
                 <button
                   onClick={goToPreviousPage}
                   disabled={currentPage === 0}
-                  className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent/80 text-accent-foreground rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed select-none"
+                  className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent/80 text-accent-foreground rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer"
                   aria-label="Previous page"
                 >
                   <ChevronLeft size={20} />
@@ -219,7 +219,7 @@ export function Skins() {
                 <button
                   onClick={goToNextPage}
                   disabled={currentPage === totalPages - 1}
-                  className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent/80 text-accent-foreground rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed select-none"
+                  className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent/80 text-accent-foreground rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed select-none cursor-pointer"
                   aria-label="Next page"
                 >
                   <span className="text-sm font-medium">Next</span>
