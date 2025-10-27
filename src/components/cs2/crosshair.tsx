@@ -95,7 +95,7 @@ export function Crosshair() {
 
         {/* Crosshair Code */}
         <div className="mt-8">
-          <h3 className="text-sm font-semibold text-foreground mb-3">
+          <h3 className="text-sm font-semibold text-card-foreground mb-3">
             Crosshair Code
           </h3>
           <div className="relative bg-background rounded-lg p-4 border border-border">
@@ -132,6 +132,7 @@ interface CrosshairPreviewProps {
 
 function CrosshairPreview({ settings }: CrosshairPreviewProps) {
   const [currentMapIndex, setCurrentMapIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef(false);
@@ -141,17 +142,30 @@ function CrosshairPreview({ settings }: CrosshairPreviewProps) {
   const CENTER_X = 454.5; // Center of 909 width
   const CENTER_Y = 80; // Center of 160 height
 
-  // Fixed dimensions scaled up for better visibility
-  const gapFromCenter = 2.5; // Gap from center to lines (un poquito más pegado)
-  const lineLengthVertical = 4; // Line length vertical (arriba/abajo)
-  const lineLengthHorizontal = 5; // Line length horizontal (izq/der)
-  const thickness = 1.5; // Line thickness (un poquito más fino)
-  const outlineThickness = settings.outline > 0 ? 1.5 : 0;
-  const dotSize = 2; // Dot size
+  // Responsive dimensions - larger on mobile
+  const scale = isMobile ? 2.5 : 1; // 2.5x bigger on mobile
+
+  const gapFromCenter = 2.5 * scale; // Gap from center to lines
+  const lineLengthVertical = 4 * scale; // Line length vertical (arriba/abajo)
+  const lineLengthHorizontal = 5 * scale; // Line length horizontal (izq/der)
+  const thickness = 1.5 * scale; // Line thickness
+  const outlineThickness = settings.outline > 0 ? 1.5 * scale : 0;
+  const dotSize = 2 * scale; // Dot size
 
   // Get color with alpha
   const color = CROSSHAIR_COLORS[settings.color] || CROSSHAIR_COLORS[0];
   const alpha = settings.alpha / 255;
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     if (!sliderRef.current || !containerRef.current) return;
@@ -222,8 +236,8 @@ function CrosshairPreview({ settings }: CrosshairPreviewProps) {
       {/* Map screenshot background */}
       <div
         ref={containerRef}
-        className="relative w-full overflow-hidden select-none cursor-grab active:cursor-grabbing"
-        style={{ aspectRatio: '909/160' }}
+        className="relative w-full overflow-hidden select-none cursor-grab active:cursor-grabbing h-[200px] sm:h-auto"
+        style={{ aspectRatio: 'auto sm:909/160' }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -242,7 +256,7 @@ function CrosshairPreview({ settings }: CrosshairPreviewProps) {
                 src={map.path}
                 alt={map.name}
                 fill
-                className="object-contain pointer-events-none"
+                className="object-cover sm:object-contain pointer-events-none"
                 draggable={false}
                 priority={index === currentMapIndex}
               />
