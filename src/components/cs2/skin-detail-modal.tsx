@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { ProcessedSkin } from "@/lib/steam-api";
 import { Tooltip } from "@/components/ui/tooltip";
+import { WearBar } from "./wear-bar";
 
 interface SkinDetailModalProps {
   skin: ProcessedSkin | null;
@@ -143,16 +144,21 @@ export function SkinDetailModal({ skin, isOpen, onClose }: SkinDetailModalProps)
                 </div>
 
                 {/* Info - Same style as card */}
-                <div className="p-6 space-y-2">
-                  <h3 className="text-xl font-bold text-foreground" title={skin.market_name}>
-                    {skin.name}
-                  </h3>
-                  <p className="text-base text-muted-foreground">
-                    {skin.exterior || '\u00A0'}
-                  </p>
-                  <p className={`text-base font-medium ${getRarityColor(skin.rarity_color).replace('border-', 'text-')}`}>
-                    {skin.rarity}
-                  </p>
+                <div className="p-6 space-y-4">
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-foreground" title={skin.market_name}>
+                      {skin.name}
+                    </h3>
+                    <p className="text-base text-muted-foreground">
+                      {skin.exterior || '\u00A0'}
+                    </p>
+                    <p className={`text-base font-medium ${getRarityColor(skin.rarity_color).replace('border-', 'text-')}`}>
+                      {skin.rarity}
+                    </p>
+                  </div>
+
+                  {/* Wear Bar - Temporary with hardcoded value */}
+                  <WearBar floatValue={0.1606} />
                 </div>
               </div>
             </div>
