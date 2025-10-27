@@ -21,6 +21,7 @@ Built with:
 - **TypeScript** - Type safety
 - **Tailwind CSS v4** - Styling
 - **Framer Motion** - Animations
+- **GSAP** - Smooth carousel animations
 - **Leetify API** - CS2 Premier statistics
 - **FACEIT API** - FACEIT ELO data
 
@@ -38,6 +39,6 @@ This project is open source as a reference for others building similar showcase 
 
 ---
 
-**Live Site**: [View on Vercel](https://prosettings-natxo.vercel.app) _(if deployed)_
+**Live Site**: [https://cs2.natxo.dev](https://cs2.natxo.dev)
 
 **Author**: Natxo | [Twitter](https://twitter.com/NatxoDev) | [Twitch](https://twitch.tv/Natxo)
