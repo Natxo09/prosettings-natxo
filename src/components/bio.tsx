@@ -37,33 +37,50 @@ const socialLinks = [
 
 export function Bio() {
   const [profile, setProfile] = useState<LeetifyProfile | null>(null);
+  const [faceitElo, setFaceitElo] = useState<number>(2323); // Fallback
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/leetify');
-        if (!response.ok) {
+        // Fetch both Leetify and FACEIT data in parallel
+        const [leetifyResponse, faceitResponse] = await Promise.all([
+          fetch('/api/leetify'),
+          fetch('/api/faceit')
+        ]);
+
+        // Handle Leetify response
+        if (leetifyResponse.ok) {
+          const leetifyData = await leetifyResponse.json();
+          setProfile(leetifyData);
+        } else {
           console.error('Failed to fetch Leetify profile');
-          setIsLoading(false);
-          return;
         }
-        const data = await response.json();
-        setProfile(data);
+
+        // Handle FACEIT response
+        if (faceitResponse.ok) {
+          const faceitData = await faceitResponse.json();
+          if (faceitData.elo) {
+            setFaceitElo(faceitData.elo);
+          }
+        } else {
+          console.error('Failed to fetch FACEIT ELO');
+        }
+
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching profile:', error);
+        console.error('Error fetching profile data:', error);
         setIsLoading(false);
       }
     };
 
     // Fetch immediately on mount
-    fetchProfile();
+    fetchData();
 
     // Poll every 1 hour (3600000ms) for updates
     // Server handles caching, so this just checks for new data
     const pollInterval = setInterval(() => {
-      fetchProfile();
+      fetchData();
     }, 3600000); // 1 hour
 
     return () => clearInterval(pollInterval);
@@ -163,7 +180,7 @@ export function Bio() {
                         fontSize: '30px',
                       }}
                     >
-                      {(profile?.ranks?.faceit_elo || 2323).toLocaleString()}
+                      {faceitElo.toLocaleString()}
                     </span>
                   </>
                 )}
