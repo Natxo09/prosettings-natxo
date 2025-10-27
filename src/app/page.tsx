@@ -4,6 +4,11 @@ import { ThemeSwitcher } from "@/components/kibo-ui/theme-switcher";
 import { Bio } from "@/components/bio";
 import { Sidebar } from "@/components/sidebar";
 import { Crosshair } from "@/components/cs2/crosshair";
+import { Viewmodel } from "@/components/cs2/viewmodel";
+import { LaunchOptions } from "@/components/cs2/launch-options";
+import { VideoSettings } from "@/components/cs2/video-settings";
+import { Hud } from "@/components/cs2/hud";
+import { Radar } from "@/components/cs2/radar";
 import { Icon } from "@/components/icon";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -66,40 +71,29 @@ export default function Home() {
               <Crosshair />
             </section>
 
-            {/* Placeholder para las demás secciones */}
+            {/* Viewmodel Section */}
             <section id="viewmodel">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">Viewmodel</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <Viewmodel />
             </section>
 
+            {/* Launch Options Section */}
             <section id="launch-options">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">Launch Options</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <LaunchOptions />
             </section>
 
+            {/* Video Settings Section */}
             <section id="video-settings">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">Video Settings</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <VideoSettings />
             </section>
 
+            {/* HUD Section */}
             <section id="hud">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">HUD</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <Hud />
             </section>
 
+            {/* Radar Section */}
             <section id="radar">
-              <div className="bg-card text-card-foreground rounded-2xl shadow-lg p-6">
-                <h2 className="text-2xl font-bold">Radar</h2>
-                <p className="text-muted-foreground mt-2">Coming soon...</p>
-              </div>
+              <Radar />
             </section>
 
             <section id="skins">

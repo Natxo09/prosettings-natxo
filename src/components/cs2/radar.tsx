@@ -4,37 +4,34 @@ import { useState } from "react";
 import { Copy, Check } from "lucide-react";
 import { Icon } from "@/components/icon";
 
-interface CrosshairSettings {
-  style: number;
-  size: number;
-  gap: number;
-  thickness: number;
-  outline: number;
-  color: number;
-  alpha: number;
-  dot: boolean;
-  tStyle?: boolean;
+interface RadarSettings {
+  playerCentered: string;
+  rotate: string;
+  squareWithScoreboard: string;
+  backgroundAlpha: number;
+  scale: number;
+  zoom: number;
+  iconScale: number;
 }
 
-const crosshairData: CrosshairSettings = {
-  style: 4, // Classic Static
-  size: 1.0, // Length
-  gap: -2.5, // Gap
-  thickness: 0.5, // Thickness
-  outline: 0, // No outline
-  color: 0, // Red (RGB: 255, 0, 0)
-  alpha: 255, // Full opacity
-  dot: true, // Center dot enabled
+const radarData: RadarSettings = {
+  playerCentered: "Yes",
+  rotate: "Yes",
+  squareWithScoreboard: "Yes",
+  backgroundAlpha: 0.63,
+  scale: 1.0,
+  zoom: 0.70,
+  iconScale: 1.0,
 };
 
-const CROSSHAIR_CODE = "CSGO-MnDFF-JJDt7-SnbjV-kYGXe-tuHCF";
+const RADAR_COMMANDS = "cl_radar_always_centered 1; cl_radar_rotate 1; cl_radar_square_with_scoreboard 1; cl_hud_radar_background_alpha 0.63; cl_hud_radar_scale 1.0; cl_radar_scale 0.70; cl_radar_icon_scale_min 1.0;";
 
-export function Crosshair() {
+export function Radar() {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(CROSSHAIR_CODE);
+      await navigator.clipboard.writeText(RADAR_COMMANDS);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -47,8 +44,8 @@ export function Crosshair() {
       {/* Header */}
       <div className="p-6 border-b border-border">
         <div className="flex items-center gap-3">
-          <Icon name="crosshair" size={28} className="text-card-foreground" />
-          <h2 className="text-2xl font-bold">Crosshair</h2>
+          <Icon name="radar" size={28} className="text-card-foreground" />
+          <h2 className="text-2xl font-bold">Radar</h2>
         </div>
       </div>
 
@@ -56,29 +53,28 @@ export function Crosshair() {
       <div className="p-6 space-y-6">
         {/* Settings Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-          <SettingItem label="Style" value={crosshairData.style} />
-          <SettingItem label="Length" value={crosshairData.size} />
-          <SettingItem label="Thickness" value={crosshairData.thickness} />
-          <SettingItem label="Gap" value={crosshairData.gap} />
-          <SettingItem label="Outline" value="No" />
-          <SettingItem label="Center Dot" value="Yes" />
-          <SettingItem label="Color" value="Red" />
-          <SettingItem label="Alpha" value={crosshairData.alpha} />
+          <SettingItem label="Player Centered" value={radarData.playerCentered} />
+          <SettingItem label="Rotate" value={radarData.rotate} />
+          <SettingItem label="Square with Scoreboard" value={radarData.squareWithScoreboard} />
+          <SettingItem label="Background Alpha" value={radarData.backgroundAlpha} />
+          <SettingItem label="Radar Size" value={radarData.scale} />
+          <SettingItem label="Radar Zoom" value={radarData.zoom} />
+          <SettingItem label="Icon Scale" value={radarData.iconScale} />
         </div>
 
-        {/* Crosshair Code */}
+        {/* Commands */}
         <div className="mt-8">
-          <h3 className="text-sm font-semibold text-foreground mb-3">
-            Crosshair Code
+          <h3 className="text-sm font-semibold text-card-foreground mb-3">
+            Console Commands
           </h3>
           <div className="relative bg-background rounded-lg p-4 border border-border">
             <code className="text-foreground break-all select-all font-mono text-sm pr-20">
-              {CROSSHAIR_CODE}
+              {RADAR_COMMANDS}
             </code>
             <button
               onClick={handleCopy}
               className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2 px-3 py-2 bg-accent hover:bg-accent/80 text-accent-foreground rounded-lg transition-colors duration-200"
-              aria-label="Copy crosshair code"
+              aria-label="Copy radar commands"
             >
               {copied ? (
                 <>
