@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ExternalLink } from "lucide-react";
 import { Icon } from "./icon";
 import { Tooltip } from "./ui/tooltip";
 
@@ -87,7 +88,16 @@ export function Footer() {
         {/* Copyright */}
         <div className="text-center">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Natxo. Open Source Project.
+            © {new Date().getFullYear()} Natxo.{" "}
+            <a
+              href="https://github.com/Natxo09/prosettings-natxo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-muted-foreground hover:opacity-70 transition-opacity underline underline-offset-2"
+            >
+              Open Source Project
+              <ExternalLink className="size-3" />
+            </a>.
           </p>
         </div>
       </div>

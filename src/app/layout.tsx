@@ -15,7 +15,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "CS2 ProSettings",
+  title: "Natxo - CS2 Settings",
   description: "My personal CS2 settings and configurations",
 };
 

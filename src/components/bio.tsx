@@ -39,6 +39,7 @@ export function Bio() {
   const [profile, setProfile] = useState<LeetifyProfile | null>(null);
   const [faceitElo, setFaceitElo] = useState<number>(2323); // Fallback
   const [isLoading, setIsLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +69,7 @@ export function Bio() {
         }
 
         setIsLoading(false);
+        setLastUpdated(new Date());
       } catch (error) {
         console.error('Error fetching profile data:', error);
         setIsLoading(false);
@@ -117,6 +119,16 @@ export function Bio() {
                 className="select-none"
                 draggable={false}
               />
+              <Tooltip content={lastUpdated ? `Updated: ${lastUpdated.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}` : 'Loading...'}>
+                <Image
+                  src="/icons/info.svg"
+                  alt="Last updated info"
+                  width={20}
+                  height={20}
+                  className="select-none cursor-help opacity-60 hover:opacity-100 transition-opacity"
+                  draggable={false}
+                />
+              </Tooltip>
             </div>
           </div>
 
